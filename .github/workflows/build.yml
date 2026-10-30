@@ -1,0 +1,25 @@
+name: Build
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install deps
+        run: sudo apt-get update && sudo apt-get install -y llvm clang lld wget unzip
+      - name: Download PS5 SDK
+        run: |
+          wget -q https://github.com/ps5-payload-dev/sdk/releases/latest/download/ps5-payload-sdk.zip
+          sudo unzip -q ps5-payload-sdk.zip -d /opt
+      - name: Build
+        env:
+          PS5_PAYLOAD_SDK: /opt/ps5-payload-sdk
+        run: make
+      - name: Upload artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: sflashdump
+          path: bin/*.elf

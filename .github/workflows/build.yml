@@ -19,7 +19,8 @@ jobs:
           PS5_PAYLOAD_SDK: /opt/ps5-payload-sdk
         run: make
       - name: Upload artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: sflashdump
           path: bin/*.elf
+          if-no-files-found: error
